@@ -10,6 +10,16 @@
 
 ## 集成方式
 
+SPM
+
+```
+dependencies: [
+    .package(url: "https://github.com/Dcell/BreadcrumbsView.git", .upToNextMajor(from: "1.0"))
+]
+```
+
+
+
 ## 使用方式
 
 初始化**BreadcrumbsView**
