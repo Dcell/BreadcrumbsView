@@ -1,6 +1,6 @@
 //
-//  BreadLineView.swift
-//  breadlineview
+//  BreadcrumbsView.swift
+//  BreadcrumbsView
 //
 //  Created by ding_qili on 2021/1/6.
 //
@@ -83,6 +83,20 @@ public class BreadcrumbsView: UICollectionView {
     
     private var hasInterval = false //是否设置了间隔试图
     
+    public override var indexPathsForSelectedItems: [IndexPath]?{
+        let indexPaths =  super.indexPathsForSelectedItems
+        if self.hasInterval {
+            return indexPaths?.reduce([], { (result, indexPath) -> [IndexPath] in
+                var result = result
+                if(indexPath.row%2 == 0){
+                    result.append(IndexPath(row: indexPath.row/2, section: 0))
+                }
+                return result
+            })
+        }
+        return indexPaths
+    }
+    
     override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame,collectionViewLayout:layout)
         self.initialize()
@@ -99,6 +113,7 @@ public class BreadcrumbsView: UICollectionView {
         self.collectionViewLayout = layoutManager
         layoutManager.delegate = self
         self.allowsSelection = true
+        self.allowsMultipleSelection = false
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
         self.bounces = false
@@ -123,6 +138,12 @@ public class BreadcrumbsView: UICollectionView {
             return super.cellForItem(at: IndexPath(row: indexPath.row * 2, section: 0))
         }
         return super.cellForItem(at: indexPath)
+    }
+    public func intervalcellForItem(at indexPath: IndexPath) -> UICollectionViewCell? {
+        if self.hasInterval {
+            return super.cellForItem(at: IndexPath(row: indexPath.row * 2 + 1, section: 0))
+        }
+        return nil
     }
     
     public override func insertItems(at indexPaths: [IndexPath]) {
@@ -218,13 +239,19 @@ extension BreadcrumbsView:UICollectionViewDelegate,UICollectionViewDataSource{
             }
             self.breadcrumbsViewDelegate?.breadcrumbsView?( self, willDisplay: cell, forItemAt: indexPath)
         }else{
-            let indexPath = IndexPath(row: indexPath.row/2 - 1, section: 0)
+            let indexPath = IndexPath(row: indexPath.row/2, section: 0)
             self.breadcrumbsViewDelegate?.breadcrumbsView?(self, willDisplayInterval: cell, forItemAt: indexPath)
         }
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return collectionView.cellForItem(at: indexPath)?.reuseIdentifier != BreadcrumbsViewReuseIdentifier.interval.rawValue
+        if !hasInterval {
+            return self.allowsSelection
+        }
+        if let reuseIdentifier = collectionView.cellForItem(at: indexPath)?.reuseIdentifier , reuseIdentifier == BreadcrumbsViewReuseIdentifier.interval.rawValue  {
+            return false
+        }
+        return indexPath.row%2 == 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
