@@ -60,6 +60,7 @@ class ViewController: UIViewController {
         self.view.subviews.forEach { (view) in
             if let breadcrumbsView = view as? BreadcrumbsView{
                 breadcrumbsView.insertItems(at: [IndexPath(row: self.nums.count - 1, section: 0)])
+                breadcrumbsView.scrollToItem(at: IndexPath(row: self.nums.count - 1, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
             }
         }
     }
@@ -73,7 +74,7 @@ class ViewController: UIViewController {
     }
     
     func demo1(){
-        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50), collectionViewLayout: UICollectionViewLayout())
+        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50))
         self.breadcrumbsView1 = breadcrumbsView
         breadcrumbsView.itemSize = CGSize(width: 50 , height: 50)
 //        breadcrumbsView.itemEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -101,7 +102,7 @@ class ViewController: UIViewController {
     }
     
     func demo2(){
-        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50), collectionViewLayout: UICollectionViewLayout())
+        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50))
         self.breadcrumbsView2 = breadcrumbsView
         breadcrumbsView.itemSize = CGSize(width: 50 , height: 50)
 //        breadcrumbsView.itemEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -128,7 +129,7 @@ class ViewController: UIViewController {
     }
     
     func demo3(){
-        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50), collectionViewLayout: UICollectionViewLayout())
+        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50))
         self.breadcrumbsView3 = breadcrumbsView
         breadcrumbsView.itemSize = CGSize(width: 50 , height: 40)
 //        breadcrumbsView.itemEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -156,7 +157,7 @@ class ViewController: UIViewController {
     }
     
     func demo4(){
-        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50), collectionViewLayout: UICollectionViewLayout())
+        let breadcrumbsView = BreadcrumbsView(frame: CGRect(x: 100, y: 100, width: self.view.frame.width, height: 50))
         self.breadcrumbsView4 = breadcrumbsView
         breadcrumbsView.itemSize = CGSize(width: 50 , height: 40)
 //        breadcrumbsView.itemEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -215,6 +216,9 @@ extension ViewController:BreadcrumbsViewDelegate{
                 if indexPath.row == selectedIndex {
                     intervalViewCell3.setShapefillColer(UIColor(red: 28/255, green: 117/225, blue: 170/255, alpha: 1))
                     intervalViewCell3.backgroundColor = UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1)
+                }else if indexPath.row == selectedIndex - 1{
+                    intervalViewCell3.setShapefillColer(UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1))
+                    intervalViewCell3.backgroundColor = UIColor(red: 28/255, green: 117/225, blue: 170/255, alpha: 1)
                 }else{
                     intervalViewCell3.setShapefillColer(UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1))
                     intervalViewCell3.backgroundColor = UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1)
@@ -226,6 +230,9 @@ extension ViewController:BreadcrumbsViewDelegate{
                 if indexPath.row == selectedIndex {
                     intervalViewCell3.setShapefillColer(UIColor(red: 28/255, green: 117/225, blue: 170/255, alpha: 1))
                     intervalViewCell3.backgroundColor = UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1)
+                }else if indexPath.row == selectedIndex - 1{
+                    intervalViewCell3.setShapefillColer(UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1))
+                    intervalViewCell3.backgroundColor = UIColor(red: 28/255, green: 117/225, blue: 170/255, alpha: 1)
                 }else{
                     intervalViewCell3.setShapefillColer(UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1))
                     intervalViewCell3.backgroundColor = UIColor(red: 39/255, green: 129/225, blue: 210/255, alpha: 1)
@@ -270,7 +277,6 @@ extension ViewController:BreadcrumbsViewDelegate{
     }
     func breadcrumbsView(_ breadcrumbsView: BreadcrumbsView, didDeselectItemAt indexPath: IndexPath) {
         nums[indexPath.row].1 = false
-        let selectedIndex = breadcrumbsView.indexPathsForSelectedItems?.first?.row ?? -1
         if breadcrumbsView == self.breadcrumbsView2 {
             if let cell = breadcrumbsView.cellForItem(at: indexPath) as? CrumbViewCell2{
                 cell.title.textColor = UIColor.black

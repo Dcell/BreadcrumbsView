@@ -97,9 +97,13 @@ public class BreadcrumbsView: UICollectionView {
         return indexPaths
     }
     
-    override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    override private init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame,collectionViewLayout:layout)
         self.initialize()
+    }
+    
+    public convenience init(frame: CGRect) {
+        self.init(frame: frame, collectionViewLayout: BreadcrumbsViewLayout())
     }
     
     required init?(coder: NSCoder) {
@@ -109,14 +113,13 @@ public class BreadcrumbsView: UICollectionView {
     private func initialize(){
         self.dataSource = self
         self.delegate = self
-        let layoutManager = BreadcrumbsViewLayout()
-        self.collectionViewLayout = layoutManager
-        layoutManager.delegate = self
-        self.allowsSelection = true
-        self.allowsMultipleSelection = false
-        self.showsHorizontalScrollIndicator = false
-        self.showsVerticalScrollIndicator = false
-        self.bounces = false
+        if let breadcrumbsViewLayout = self.collectionViewLayout as? BreadcrumbsViewLayout{
+            breadcrumbsViewLayout.delegate = self
+            self.allowsSelection = true
+            self.allowsMultipleSelection = false
+            self.showsHorizontalScrollIndicator = false
+            self.showsVerticalScrollIndicator = false
+        }
     }
     
     public func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier identifier: BreadcrumbsViewReuseIdentifier){
@@ -162,7 +165,6 @@ public class BreadcrumbsView: UICollectionView {
         }else{
             super.insertItems(at: indexPaths)
         }
-            
     }
     
     public override func deleteItems(at indexPaths: [IndexPath]) {
@@ -206,6 +208,14 @@ public class BreadcrumbsView: UICollectionView {
             super.moveItem(at: IndexPath(row: indexPath.row * 2, section: 0), to: IndexPath(row: newIndexPath.row * 2, section: 0))
         }else{
             super.moveItem(at: indexPath, to: newIndexPath)
+        }
+    }
+    
+    public override func scrollToItem(at indexPath: IndexPath, at scrollPosition: UICollectionView.ScrollPosition, animated: Bool) {
+        if self.hasInterval {
+            super.scrollToItem(at: IndexPath(row: indexPath.row * 2, section: 0), at: scrollPosition, animated: animated)
+        }else{
+            super.scrollToItem(at: indexPath, at: scrollPosition, animated: animated)
         }
     }
 }
